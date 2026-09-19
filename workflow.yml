@@ -1,0 +1,65 @@
+# Note: For GitHub Actions to automatically detect and run this workflow,
+# a copy is placed in: .github/workflows/workflow.yml
+
+name: Germany Weather Report Emailer (IST)
+
+on:
+  schedule:
+    # ----------------------------------------------------------------------------
+    # NOTE: GitHub Actions cron operates strictly in UTC.
+    # Indian Standard Time (IST) is UTC + 5:30.
+    # To run at a desired IST time, subtract 5 hours and 30 minutes.
+    #
+    # Examples:
+    #   07:00 AM IST -> 01:30 UTC -> '30 1 * * *'
+    #   08:00 AM IST -> 02:30 UTC -> '30 2 * * *'  <-- (Active default)
+    #   09:00 AM IST -> 03:30 UTC -> '30 3 * * *'
+    #   06:00 PM IST -> 12:30 UTC -> '30 12 * * *'
+    #   Twice daily (08:00 AM & 08:00 PM IST) -> '30 2,14 * * *'
+    # ----------------------------------------------------------------------------
+    - cron: '30 2 * * *'
+
+  # Allows manual triggering from the GitHub Actions tab at any time
+  workflow_dispatch:
+
+  # Optional: run on push to main to test the workflow
+  push:
+    branches:
+      - main
+
+jobs:
+  send-weather-email:
+    runs-on: ubuntu-latest
+
+    env:
+      # Sets runner system and Python timezone to Indian Standard Time (IST)
+      TZ: 'Asia/Kolkata'
+
+      # Email credentials passed securely from GitHub Repository Secrets
+      SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+      SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+      RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+          cache-dependency-path: 'requirements.txt'
+
+      - name: Verify IST Timezone on Runner
+        run: |
+          echo "Current Runner Time (IST): $(date)"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Execute Weather Script & Send Email
+        run: |
+          python germany.py

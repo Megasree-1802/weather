@@ -12,7 +12,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
-# Load .env configuration if present
+# Load .env configuration if present locally
 _env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
 if os.path.exists(_env_path):
     with open(_env_path, "r", encoding="utf-8") as _f:
@@ -24,11 +24,11 @@ if os.path.exists(_env_path):
 
 # ==============================================================================
 # EMAIL CONFIGURATION (Gmail)
-# Credentials are read from .env file or environment variables to protect secrets
+# Reads from local .env or GitHub Secrets to protect credentials
 # ==============================================================================
-SENDER_EMAIL = os.getenv("SENDER_EMAIL", "your_email@gmail.com")
-SENDER_PASSWORD = os.getenv("SENDER_PASSWORD", "your_app_password_here")
-RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "receiver_email@example.com")
+SENDER_EMAIL = os.getenv("SENDER_EMAIL", "")
+SENDER_PASSWORD = os.getenv("SENDER_PASSWORD", "")
+RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "")
 
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))

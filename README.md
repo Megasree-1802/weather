@@ -11,6 +11,7 @@ An automated Python tool that fetches live weather forecasts for Germany (or any
 - **📧 Automated Email Reports**: Sends a responsive HTML email table and plain-text summary via SMTP.
 - **🛡️ Secure Configuration**: Supports `.env` files to prevent credentials from being exposed.
 - **🪟 Cross-Platform Console**: Handles UTF-8 console output for emojis and special characters on Windows and Linux.
+- **⏰ Scheduled GitHub Actions (IST)**: Automated daily reports at 08:00 AM IST via GitHub Actions.
 
 ---
 
